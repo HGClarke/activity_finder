@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:place_finder/models/activity.dart';
+
+import 'package:place_finder/models/place.dart';
+import 'package:place_finder/screens/places_screen.dart';
+import 'package:place_finder/services/networking.dart';
 
 class ActivityCarousel extends StatelessWidget {
   final String sectionName;
@@ -33,7 +38,33 @@ class ActivityCarousel extends StatelessWidget {
             itemBuilder: (BuildContext context, int index) {
               // Activity activity = activities[index];
               return GestureDetector(
-                onTap: () => print('tapped'),
+                onTap: () async {
+                  Position position = await Geolocator().getCurrentPosition(
+                      desiredAccuracy: LocationAccuracy.low);
+
+                  if (GeolocationStatus.granted == true) {
+                    NetworkHelper helper = NetworkHelper(position: position);
+
+                    List<Place> places =
+                        await helper.getPlaces(activities[index].name);
+                    var imagePath = activities[index].imageUrl;
+                    for (Place place in places) {
+                      print(
+                          '${place.name}, ${place.address}, ${place.city}, ${place.state}, ${place.country}');
+                    }
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => PlacesPage(
+                          imagePath: imagePath,
+                          places: places,
+                        ),
+                      ),
+                    );
+                  } else {
+                    print('status denied');
+                  }
+                },
                 child: Container(
                   margin: EdgeInsets.all(10.0),
                   width: 210.0,
@@ -68,23 +99,22 @@ class ActivityCarousel extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20.0),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black26,
-                              offset: Offset(0.0, 2.0),
-                              blurRadius: 6.0,
-                            ),
-                          ],
-                        ),
-                        child: Stack(
-                          children: <Widget>[
-                            Hero(
-                              tag: activities[index].imageUrl,
-                              child: ClipRRect(
+                      Hero(
+                        tag: activities[index].imageUrl,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20.0),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black26,
+                                offset: Offset(0.0, 2.0),
+                                blurRadius: 6.0,
+                              ),
+                            ],
+                          ),
+                          child: Stack(
+                            children: <Widget>[
+                              ClipRRect(
                                 borderRadius: BorderRadius.circular(20.0),
                                 child: Image(
                                   height: 180.0,
@@ -93,10 +123,8 @@ class ActivityCarousel extends StatelessWidget {
                                   fit: BoxFit.cover,
                                 ),
                               ),
-                            ),
-                            Positioned(
-                                left: 10.0, bottom: 10.0, child: Container()),
-                          ],
+                            ],
+                          ),
                         ),
                       )
                     ],

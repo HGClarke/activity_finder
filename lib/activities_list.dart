@@ -19,6 +19,25 @@ Activity football =
 Activity hockey =
     Activity(name: 'Hockey', imageUrl: 'assets/images/sports/hockey.jpg');
 
+// Food Sections
+
+Activity chineseFood =
+    Activity(name: 'Chinese Food', imageUrl: 'assets/images/food/chinese.jpg');
+
+Activity italianFood =
+    Activity(name: 'Italian Food', imageUrl: 'assets/images/food/italian.jpg');
+
+Activity frenchFood =
+    Activity(name: 'French Food', imageUrl: 'assets/images/food/french.jpg');
+
+Activity japanaseFood = Activity(
+    name: 'Japanese Food', imageUrl: 'assets/images/food/japanese.jpg');
+
+Activity mexicanFood =
+    Activity(name: 'Mexican Food', imageUrl: 'assets/images/food/mexican.jpg');
+
+Activity carribeanFood = Activity(
+    name: 'Carribean Food', imageUrl: 'assets/images/food/carribean.jpg');
 List<Activity> sportsActivities = [
   soccer,
   basketball,
@@ -29,7 +48,15 @@ List<Activity> sportsActivities = [
   hockey
 ];
 
+List<Activity> foods = [
+  chineseFood,
+  italianFood,
+  frenchFood,
+  mexicanFood,
+  carribeanFood
+];
+
 List<Section> sections = [
   Section(name: 'Sports', activities: sportsActivities),
-  Section(name: 'Sports', activities: sportsActivities),
+  Section(name: 'Restaurants', activities: foods),
 ];
