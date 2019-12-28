@@ -85,9 +85,6 @@ class _PlacesPageState extends State<PlacesPage> {
                 final place = widget.places[index];
                 return ListTile(
                   onTap: () async {
-                    //TODO: Prompt for google maps or apple maps and pass in the address
-                    print('tapped on ${place.name}');
-                    print('coords are ${place.latitude}, ${place.longitude}');
                     try {
                       final availableMaps = await MapLauncher.installedMaps;
 
