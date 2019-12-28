@@ -1,15 +1,11 @@
 class Place {
   final String name;
-  final String address;
-  final String city;
-  final String state;
-  final String country;
+  final double latitude;
+  final double longitude;
 
-  Place({this.name, this.city, this.address, this.country, this.state});
+  Place({this.name, this.latitude, this.longitude});
   Place.fromJSON(json)
       : name = json["venue"]["name"],
-        address = json["venue"]["location"]["address"],
-        city = json["venue"]["location"]["city"],
-        state = json["venue"]["location"]["state"],
-        country = json["venue"]["location"]["country"];
+        latitude = json["venue"]["location"]["lat"],
+        longitude = json["venue"]["location"]["lng"];
 }

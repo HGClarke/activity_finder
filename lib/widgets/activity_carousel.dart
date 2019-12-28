@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:place_finder/models/activity.dart';
@@ -10,6 +12,24 @@ class ActivityCarousel extends StatelessWidget {
   final String sectionName;
   final List<Activity> activities;
   ActivityCarousel({this.sectionName, this.activities});
+
+  List<Place> getRecommendations(List<Place> places) {
+    if (places.length <= 10) return places;
+    List<Place> randomPlaces = generateRandomPlaces(places).toList();
+    return randomPlaces;
+  }
+
+  List<Place> generateRandomPlaces(List<Place> places) {
+    Set<Place> randomPlaces = Set<Place>();
+
+    while (randomPlaces.length < 10) {
+      int randomIndex = Random().nextInt(places.length);
+      randomPlaces.add(places[randomIndex]);
+    }
+
+    return randomPlaces.toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -24,7 +44,6 @@ class ActivityCarousel extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 22.0,
                   fontWeight: FontWeight.bold,
-                  letterSpacing: 1.5,
                 ),
               ),
             ],
@@ -39,31 +58,25 @@ class ActivityCarousel extends StatelessWidget {
               // Activity activity = activities[index];
               return GestureDetector(
                 onTap: () async {
+                  // TODO: Need to make sure that if user denied access, we alert user
                   Position position = await Geolocator().getCurrentPosition(
                       desiredAccuracy: LocationAccuracy.low);
 
-                  if (GeolocationStatus.granted == true) {
-                    NetworkHelper helper = NetworkHelper(position: position);
+                  NetworkHelper helper = NetworkHelper(position: position);
 
-                    List<Place> places =
-                        await helper.getPlaces(activities[index].name);
-                    var imagePath = activities[index].imageUrl;
-                    for (Place place in places) {
-                      print(
-                          '${place.name}, ${place.address}, ${place.city}, ${place.state}, ${place.country}');
-                    }
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => PlacesPage(
-                          imagePath: imagePath,
-                          places: places,
-                        ),
+                  List<Place> places =
+                      await helper.getPlaces(activities[index].name);
+                  var recommendedPlaces = getRecommendations(places);
+                  var imagePath = activities[index].imageUrl;
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => PlacesPage(
+                        imagePath: imagePath,
+                        places: recommendedPlaces,
                       ),
-                    );
-                  } else {
-                    print('status denied');
-                  }
+                    ),
+                  );
                 },
                 child: Container(
                   margin: EdgeInsets.all(10.0),
@@ -77,7 +90,7 @@ class ActivityCarousel extends StatelessWidget {
                           height: 120.0,
                           width: 200.0,
                           decoration: BoxDecoration(
-                            color: Colors.black26,
+                            color: Colors.grey.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(10.0),
                           ),
                           child: Padding(
@@ -91,7 +104,6 @@ class ActivityCarousel extends StatelessWidget {
                                   style: TextStyle(
                                     fontSize: 22.0,
                                     fontWeight: FontWeight.w600,
-                                    letterSpacing: 1.2,
                                   ),
                                 ),
                               ],

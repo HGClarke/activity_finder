@@ -9,7 +9,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Activity Finder',
-      theme: ThemeData.dark(),
+      theme: ThemeData.light(),
       home: MyHomePage(),
     );
   }
