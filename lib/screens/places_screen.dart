@@ -33,6 +33,13 @@ class _PlacesPageState extends State<PlacesPage> {
     return mapTiles;
   }
 
+  Widget noData() => Center(
+        child: Text(
+          'Unfortunately, we could not find any recommendations',
+          style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+        ),
+      );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,30 +47,27 @@ class _PlacesPageState extends State<PlacesPage> {
         children: <Widget>[
           Stack(
             children: <Widget>[
-              Hero(
-                tag: widget.imagePath,
-                child: Container(
-                  height: MediaQuery.of(context).size.width - 60,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(20),
-                        bottomRight: Radius.circular(20)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black26,
-                        offset: Offset(0.0, 2.0),
-                        blurRadius: 6.0,
-                      ),
-                    ],
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(20),
-                        bottomRight: Radius.circular(20)),
-                    child: Image(
-                      image: AssetImage(widget.imagePath),
-                      fit: BoxFit.cover,
+              Container(
+                height: MediaQuery.of(context).size.width - 60,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(20),
+                      bottomRight: Radius.circular(20)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black26,
+                      offset: Offset(0.0, 2.0),
+                      blurRadius: 6.0,
                     ),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(20),
+                      bottomRight: Radius.circular(20)),
+                  child: Image(
+                    image: AssetImage(widget.imagePath),
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),
@@ -78,6 +82,17 @@ class _PlacesPageState extends State<PlacesPage> {
               ),
             ],
           ),
+          SizedBox(
+            height: 18,
+          ),
+          widget.places.length == 0
+              ? noData()
+              : Center(
+                  child: Text(
+                    'Here are a few recommendations',
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+                  ),
+                ),
           Expanded(
             child: ListView.builder(
               itemCount: widget.places.length,
